@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery Predictor</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- ✅ Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKR7oAR2hrdOhNdMcT-PerUO-sTr_BtxI&libraries=places&callback=initMap" async defer></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+    min-height:100vh;
+    color:white;
+    background:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836') no-repeat center center/cover;
+    position:relative;
+}
+
+/* overlay */
+body::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+}
+
+/* navbar */
+header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    padding:20px 50px;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:600;
+}
+
+nav a{
+    margin-left:20px;
+    text-decoration:none;
+    color:white;
+}
+
+/* container */
+.container{
+    position:relative;
+    z-index:2;
+    width:420px;
+    margin:auto;
+    margin-top:40px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(15px);
+    padding:20px;
+    border-radius:20px;
+    text-align:center;
+}
+
+/* map */
+#map{
+    height:220px;
+    border-radius:15px;
+    margin-bottom:10px;
+}
+
+/* inputs */
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:10px;
+    border:none;
+    outline:none;
+}
+
+/* button */
+button{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    background:#ff7e5f;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ff5722;
+    transform:scale(1.05);
+}
+
+/* result */
+.result{
+    margin-top:15px;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🚀 DeliveryAI</div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/predict_page">Predict</a>
+    </nav>
+</header>
+
+<div class="container">
+
+<h2>📦 Predict Delivery Time</h2>
+
+<div id="map"></div>
+
+<form action="/predict" method="post">
+    <input id="origin" name="origin" placeholder="Restaurant Location" required>
+    <input id="destination" name="destination" placeholder="Delivery Location" required>
+    <input type="number" name="prep_time" placeholder="Preparation Time (minutes)" required>
+
+     
+    <div style="margin:10px 0;text-align:left;color:white;">Traffic Level:</div>
+
+<div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;">
+
+    <label class="traffic-btn">
+        <input type="radio" name="traffic" value="1" required>
+        <span>🚗 Low</span>
+    </label>
+
+    <label class="traffic-btn">
+        <input type="radio" name="traffic" value="2">
+        <span>🚕 Medium</span>
+    </label>
+
+    <label class="traffic-btn">
+        <input type="radio" name="traffic" value="3">
+        <span>🚙 High</span>
+    </label>
+
+</div>
+    <button type="submit">Delivery Time</button>
+
+</form>
+
+<div class="result">
+    {% if distance %}
+    <p>📏 Distance: {{ distance }} km</p>
+    {% endif %}
+    <p>{{ prediction_text }}</p>
+</div>
+
+</div>
+
+<script>
+let map, directionsService, directionsRenderer;
+let marker1, marker2;
+
+function initMap() {
+
+    const center = { lat: 23.2599, lng: 77.4126 };
+
+    map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        center: center
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    const input1 = document.getElementById("origin");
+    const input2 = document.getElementById("destination");
+
+    new google.maps.places.Autocomplete(input1);
+    new google.maps.places.Autocomplete(input2);
+
+    map.addListener("click", (e) => {
+        if (!marker1) {
+            marker1 = new google.maps.Marker({
+                position: e.latLng,
+                map: map
+            });
+            input1.value = e.latLng.lat() + "," + e.latLng.lng();
+        } else {
+            marker2 = new google.maps.Marker({
+                position: e.latLng,
+                map: map
+            });
+            input2.value = e.latLng.lat() + "," + e.latLng.lng();
+
+            drawRoute();
+        }
+    });
+}
+
+function drawRoute() {
+
+    const start = document.getElementById("origin").value;
+    const end = document.getElementById("destination").value;
+
+    directionsService.route({
+        origin: start,
+        destination: end,
+        travelMode: "DRIVING"
+    }, (result, status) => {
+        if (status === "OK") {
+            directionsRenderer.setDirections(result);
+        }
+    });
+}
+</script>
+
+</body>
+</html>

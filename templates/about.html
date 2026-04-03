@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+    min-height:100vh;
+    color:white;
+    background:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836') no-repeat center center/cover;
+    position:relative;
+}
+
+body::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+}
+
+/* navbar */
+header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    padding:20px 50px;
+}
+
+nav a{
+    margin-left:20px;
+    color:white;
+    text-decoration:none;
+}
+
+/* container */
+.container{
+    position:relative;
+    z-index:2;
+    padding:40px;
+}
+
+/* sections */
+.section{
+    margin-bottom:40px;
+}
+
+.cards{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:220px;
+    padding:20px;
+    border-radius:15px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>🚀 DeliveryAI</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/predict_page">Predict</a>
+    </nav>
+</header>
+
+<div class="container">
+
+<!-- FEATURES -->
+<div class="section">
+<h1>⚙️ Features</h1>
+
+<div class="cards">
+    <div class="card">🗺️ Live Map Selection</div>
+    <div class="card">📏 Accurate Distance</div>
+    <div class="card">🤖 ML Prediction</div>
+    <div class="card">⚡ Fast Results</div>
+</div>
+</div>
+
+<!-- HOW TO USE -->
+<div class="section">
+<h1>📌 How to Use</h1>
+
+<p>1️⃣ Enter restaurant location</p>
+<p>2️⃣ Enter delivery location</p>
+<p>3️⃣ Add preparation time</p>
+<p>4️⃣ Select traffic level</p>
+<p>5️⃣ Click Predict</p>
+<p>6️⃣ Get delivery time instantly 🚀</p>
+
+</div>
+
+</div>
+
+</body>
+</html>
